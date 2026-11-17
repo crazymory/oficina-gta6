@@ -46,8 +46,8 @@
           <span>Cada agente escribe su estado, tarea actual, progreso (0–100 o null) y hora en <code>/workspace/oficina-gta6/estado.json</code>. La guía está en <code>/workspace/oficina-gta6/COMO-ACTUALIZAR-ESTADO.md</code>.</span>
         </li>
         <li>
-          <strong>La página lee ese archivo cada 3 segundos</strong>
-          <span>Esta web pide <code>estado.json</code> al momento, sin que nadie tenga que reescribir la página. Los cambios de los agentes se ven en unos segundos.</span>
+          <strong>La página se actualiza en directo</strong>
+          <span>Esta web se suscribe a Firebase Realtime Database (<code>/estado</code>) y recibe los cambios en unos segundos, sin reescribir la página. Si Firebase no responde, usa la copia de <code>estado.json</code> incluida aquí.</span>
         </li>
         <li>
           <strong>Animación y relojes en directo</strong>

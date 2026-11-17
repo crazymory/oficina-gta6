@@ -214,33 +214,130 @@
     text.textContent = `En directo · última actualización ${agoSeconds(lastFetchOk, now)}`;
   }
 
+  const FIREBASE_ESTADO_URL = "https://oficina-gta6-crazymory-default-rtdb.europe-west1.firebasedatabase.app/estado.json";
+
+  function applyEstado(data) {
+    if (!data || typeof data !== "object") throw new Error("json");
+    estado = {
+      actualizado: data.actualizado || "",
+      contadores: {
+        clips_publicados: data.contadores?.clips_publicados ?? 0,
+        visualizaciones: data.contadores?.visualizaciones ?? 0,
+        ingresos_usd: data.contadores?.ingresos_usd ?? 0,
+      },
+      agentes: data.agentes || {},
+      traspasos: Array.isArray(data.traspasos) ? data.traspasos : [],
+    };
+    lastFetchOk = Date.now();
+    lastFetchError = false;
+    renderStatic();
+  }
+
+  async function fetchEstadoFrom(url) {
+    const res = await fetch(`${url}${url.includes("?") ? "&" : "?"}t=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) throw new Error(String(res.status));
+    const data = await res.json();
+    applyEstado(data);
+  }
+
   async function fetchEstado() {
     if (fetching) return;
     fetching = true;
     try {
-      const res = await fetch(`estado.json?t=${Date.now()}`, { cache: "no-store" });
-      if (!res.ok) throw new Error(String(res.status));
-      const data = await res.json();
-      if (!data || typeof data !== "object") throw new Error("json");
-      estado = {
-        actualizado: data.actualizado || "",
-        contadores: {
-          clips_publicados: data.contadores?.clips_publicados ?? 0,
-          visualizaciones: data.contadores?.visualizaciones ?? 0,
-          ingresos_usd: data.contadores?.ingresos_usd ?? 0,
-        },
-        agentes: data.agentes || {},
-        traspasos: Array.isArray(data.traspasos) ? data.traspasos : [],
-      };
-      lastFetchOk = Date.now();
-      lastFetchError = false;
-      renderStatic();
+      await fetchEstadoFrom(FIREBASE_ESTADO_URL);
     } catch {
-      lastFetchError = true;
+      try {
+        await fetchEstadoFrom(`estado.json`);
+      } catch {
+        lastFetchError = true;
+      }
     } finally {
       fetching = false;
       updateLiveBadge(Date.now());
     }
+  }
+
+  function handleFirebaseEvent(raw) {
+    let payload;
+    try {
+      payload = JSON.parse(raw);
+    } catch {
+      return;
+    }
+    if (payload && (payload.path === "/" || payload.path === "" || payload.path == null)) {
+      if (payload.data == null) {
+        lastFetchError = true;
+        updateLiveBadge(Date.now());
+        fetchEstado();
+        return;
+      }
+      try {
+        applyEstado(payload.data);
+      } catch {
+        lastFetchError = true;
+        fetchEstado();
+      }
+      updateLiveBadge(Date.now());
+      return;
+    }
+    fetchEstado();
+  }
+
+  function subscribeEstado() {
+    fetchEstado();
+    if (typeof EventSource === "undefined") {
+      setInterval(fetchEstado, POLL_MS);
+      return;
+    }
+    let es;
+    let opened = false;
+    let fallbackTimer = 0;
+    const startFallbackPoll = () => {
+      if (fallbackTimer) return;
+      fallbackTimer = setInterval(fetchEstado, POLL_MS);
+    };
+    const stopFallbackPoll = () => {
+      if (!fallbackTimer) return;
+      clearInterval(fallbackTimer);
+      fallbackTimer = 0;
+    };
+    const connect = () => {
+      try {
+        es = new EventSource(FIREBASE_ESTADO_URL);
+      } catch {
+        startFallbackPoll();
+        return;
+      }
+      const failSafe = setTimeout(() => {
+        if (!opened) {
+          try { es.close(); } catch {}
+          startFallbackPoll();
+        }
+      }, 8000);
+      const onOk = (ev) => {
+        opened = true;
+        clearTimeout(failSafe);
+        stopFallbackPoll();
+        handleFirebaseEvent(ev.data);
+      };
+      es.addEventListener("put", onOk);
+      es.addEventListener("patch", onOk);
+      es.addEventListener("cancel", () => {
+        lastFetchError = true;
+        updateLiveBadge(Date.now());
+        startFallbackPoll();
+      });
+      es.onerror = () => {
+        lastFetchError = true;
+        updateLiveBadge(Date.now());
+        if (!opened) {
+          clearTimeout(failSafe);
+          try { es.close(); } catch {}
+          startFallbackPoll();
+        }
+      };
+    };
+    connect();
   }
 
   let barTarget = {};
@@ -630,6 +727,5 @@
 
   renderStatic();
   requestAnimationFrame(loop);
-  fetchEstado();
-  setInterval(fetchEstado, POLL_MS);
+  subscribeEstado();
 })();
