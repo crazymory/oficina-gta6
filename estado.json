@@ -96,5 +96,9 @@
       "que": "6 enlaces de los 3 edits Tokyo Girl (registro-clips.csv)",
       "activo": false
     }
-  ]
+  ],
+  "oficina": {
+    "abierta": false,
+    "mensaje": "Oficina cerrada hasta nuevo aviso"
+  }
 }

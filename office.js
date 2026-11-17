@@ -226,6 +226,7 @@
         ingresos_usd: data.contadores?.ingresos_usd ?? 0,
       },
       agentes: data.agentes || {},
+      oficina: data.oficina || null,
       traspasos: Array.isArray(data.traspasos) ? data.traspasos : [],
     };
     lastFetchOk = Date.now();
@@ -663,7 +664,19 @@
     els.stamp.textContent = `Actualizado: ${fmtMadrid(estado.actualizado)} · ${ago(estado.actualizado, wallNow)}`;
   }
 
+  function renderSign() {
+    const el = document.getElementById("office-sign");
+    if (!el) return;
+    const o = estado.oficina;
+    if (!o) { el.hidden = true; return; }
+    el.hidden = false;
+    el.className = "office-sign " + (o.abierta ? "is-open" : "is-closed");
+    el.textContent = o.abierta ? "ABIERTA" : "CERRADA";
+    el.title = o.mensaje || "";
+  }
+
   function renderStatic() {
+    renderSign();
     renderChips();
     els.demoBtn.classList.toggle("is-on", demo);
     els.demoBtn.textContent = demo ? "Volver al estado real" : "Ver demo del flujo";
