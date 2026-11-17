@@ -207,11 +207,11 @@
     }
     if (lastFetchError) {
       badge.className = "live-badge is-off";
-      text.textContent = `Sin conexión · última actualización ${agoSeconds(lastFetchOk, now)}`;
+      text.textContent = "Sin conexión · reintentando…";
       return;
     }
     badge.className = "live-badge is-live";
-    text.textContent = `En directo · última actualización ${agoSeconds(lastFetchOk, now)}`;
+    text.textContent = "En directo";
   }
 
   const FIREBASE_ESTADO_URL = "https://oficina-gta6-crazymory-default-rtdb.europe-west1.firebasedatabase.app/estado.json";
