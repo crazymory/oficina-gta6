@@ -20,7 +20,7 @@
     { id: "publicador", name: "Publicador", short: "Publicador", accent: MAGENTA, hair: "#E8E8E8", skin: "#8D5524", role: "Sube a TikTok @crazymory y YouTube @CrazyMory, siempre con el OK de Crazy Mory.", files: ["/workspace/oficina-gta6/listos-para-publicar/"] },
     { id: "analista_pub", name: "Analista de Publicaciones", short: "Análisis", accent: BLUE, hair: "#3B2A20", skin: "#E0AC69", role: "Mide cada clip publicado y devuelve lo aprendido a Selección.", files: ["/workspace/oficina-gta6/metricas/registro-clips.csv"] },
     { id: "buscador", name: "Buscador de Campañas y Monetización", short: "Buscador", accent: PINK, hair: "#FFB000", skin: "#F1C27D", role: "Busca campañas de clipping y otras formas de ganar dinero desde España.", files: ["/workspace/oficina-gta6/campañas/reglas.md"] },
-    { id: "jojo", name: "Jojo (coordinador)", short: "Jojo", accent: PINK, hair: PINK, skin: "#FFDBAC", role: "Coordina a los seis agentes y lleva cada clip a la aprobación de Crazy Mory.", files: ["/workspace/oficina-gta6/estado.json"] },
+    { id: "jojo", name: "Jojo (coordinador)", short: "Jojo", accent: "#FFFFFF", hair: "#F5F5F5", skin: "#FFDBAC", role: "Coordina a los seis agentes y lleva cada clip a la aprobación de Crazy Mory.", files: ["/workspace/oficina-gta6/estado.json"] },
   ];
 
   const WIDE = {
