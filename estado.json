@@ -1,0 +1,100 @@
+{
+  "actualizado": "2026-11-17T19:49:32+01:00",
+  "contadores": {
+    "clips_publicados": 3,
+    "visualizaciones": 88,
+    "ingresos_usd": 0
+  },
+  "agentes": {
+    "analista": {
+      "estado": "Oficina cerrada hasta 18/11 23:45",
+      "tipo": "pausa",
+      "tarea_actual": "Descanso hasta la cobertura del lanzamiento",
+      "ultima_actualizacion": "2026-11-17T19:44:48+01:00",
+      "progreso": null,
+      "pasos_hechos": null,
+      "pasos_totales": null,
+      "paso_actual": "En pausa"
+    },
+    "seleccionador": {
+      "estado": "En pausa",
+      "tipo": "pausa",
+      "tarea_actual": "Oficina cerrada hasta el 18/11 a las 23:45. Sin material pendiente.",
+      "ultima_actualizacion": "2026-11-17T19:48:29+01:00",
+      "progreso": null,
+      "pasos_hechos": null,
+      "pasos_totales": null,
+      "paso_actual": null
+    },
+    "editor": {
+      "estado": "En pausa",
+      "tipo": "pausa",
+      "tarea_actual": "Oficina cerrada hasta el 18/11 a las 23:45.",
+      "ultima_actualizacion": "2026-11-17T19:48:24+01:00",
+      "progreso": null,
+      "pasos_hechos": null,
+      "pasos_totales": null,
+      "paso_actual": null
+    },
+    "publicador": {
+      "estado": "En pausa",
+      "tipo": "pausa",
+      "tarea_actual": "Oficina cerrada hasta el 18/11 a las 23:45. 3 edits publicados; 2 de 3 TikTok enviados a Tokyo Girl (Jason y Lucia, Vice City). Datos oficiales rechazado por Content Rewards.",
+      "ultima_actualizacion": "2026-11-17T19:49:32+01:00",
+      "progreso": null,
+      "pasos_hechos": null,
+      "pasos_totales": null,
+      "paso_actual": null
+    },
+    "analista_pub": {
+      "estado": "Oficina cerrada",
+      "tipo": "pausa",
+      "tarea_actual": "Medición pausada hasta el 18/11 a las 23:45; luego se retoma 3 veces al día (10, 16 y 22 h).",
+      "ultima_actualizacion": "2026-11-17T19:48:34+01:00",
+      "progreso": null,
+      "pasos_hechos": 1,
+      "pasos_totales": null,
+      "paso_actual": null
+    },
+    "buscador": {
+      "estado": "En pausa",
+      "tipo": "pausa",
+      "tarea_actual": "Oficina cerrada hasta el 18/11 a las 23:45. Lista del lanzamiento entregada a Jojo.",
+      "ultima_actualizacion": "2026-11-17T19:48:39+01:00",
+      "progreso": null,
+      "pasos_hechos": null,
+      "pasos_totales": null,
+      "paso_actual": null
+    },
+    "jojo": {
+      "estado": "Oficina cerrada hasta 18/11 23:45",
+      "tipo": "pausa",
+      "tarea_actual": "Descanso hasta la cobertura del lanzamiento",
+      "ultima_actualizacion": "2026-11-17T19:44:48+01:00",
+      "progreso": null,
+      "pasos_hechos": null,
+      "pasos_totales": null,
+      "paso_actual": "En pausa"
+    }
+  },
+  "traspasos": [
+    {
+      "de": "buscador",
+      "a": "seleccionador",
+      "que": "Reglas de Tokyo Girl (campañas/reglas.md)",
+      "activo": false
+    },
+    {
+      "de": "editor",
+      "a": "jojo",
+      "que": "3 edits Tokyo Girl para aprobación de Crazy Mory",
+      "activo": false
+    },
+    {
+      "de": "publicador",
+      "a": "analista_pub",
+      "que": "6 enlaces de los 3 edits Tokyo Girl (registro-clips.csv)",
+      "activo": false
+    }
+  ]
+}

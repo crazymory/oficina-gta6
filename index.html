@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#08070B">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="La planta de la oficina de clips de GTA VI en versión videojuego: cada agente en su mesa con su estado real, Jojo coordinando en el centro y el trabajo pasando de mesa en mesa.">
+  <title>Oficina virtual de clips CrazyMory</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="page-head">
+    <div class="live-badge" id="live-badge" aria-live="polite">
+      <span class="live-dot" aria-hidden="true"></span>
+      <span id="live-text">Conectando…</span>
+    </div>
+    <h1>Oficina virtual de clips CrazyMory</h1>
+    <p class="lede">La planta de la oficina de clips de GTA VI en versión videojuego: cada agente en su mesa con su estado real, Jojo coordinando en el centro y el trabajo pasando de mesa en mesa. Pulsa un personaje para ver su ficha.</p>
+  </header>
+
+  <main>
+    <section class="block" aria-labelledby="planta-title">
+      <h2 id="planta-title">La planta</h2>
+      <div class="game" id="game">
+        <div id="hud"></div>
+        <div class="toolbar">
+          <span class="stamp" id="updated-stamp">Cargando estado…</span>
+          <button type="button" id="demo-btn" class="btn">Ver demo del flujo</button>
+        </div>
+        <p class="demo-note" id="demo-note" hidden>Demostración del recorrido de un clip. No es actividad real.</p>
+        <div class="office-wrap" id="office-wrap">
+          <svg id="office" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Planta de la oficina de clips con los agentes en sus mesas"></svg>
+        </div>
+        <div class="chips" id="chips"></div>
+        <div id="panel"></div>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="como-title">
+      <h2 id="como-title">Cómo se actualiza</h2>
+      <ol class="steps">
+        <li>
+          <strong>Una sola fuente de estado</strong>
+          <span>Cada agente escribe su estado, tarea actual, progreso (0–100 o null) y hora en <code>/workspace/oficina-gta6/estado.json</code>. La guía está en <code>/workspace/oficina-gta6/COMO-ACTUALIZAR-ESTADO.md</code>.</span>
+        </li>
+        <li>
+          <strong>La página lee ese archivo cada 3 segundos</strong>
+          <span>Esta web pide <code>estado.json</code> al momento, sin que nadie tenga que reescribir la página. Los cambios de los agentes se ven en unos segundos.</span>
+        </li>
+        <li>
+          <strong>Animación y relojes en directo</strong>
+          <span>Los personajes, las barras de progreso, los traspasos, la cuenta atrás y el «hace X min» se mueven solos; los estados cambian en cuanto llega un dato nuevo.</span>
+        </li>
+      </ol>
+    </section>
+
+    <section class="block" aria-labelledby="archivos-title">
+      <h2 id="archivos-title">Archivos compartidos</h2>
+      <ul class="rows">
+        <li><strong>Estado de la oficina</strong><span>/workspace/oficina-gta6/estado.json</span></li>
+        <li><strong>Cómo actualizar el estado</strong><span>/workspace/oficina-gta6/COMO-ACTUALIZAR-ESTADO.md</span></li>
+        <li><strong>Listos para publicar</strong><span>/workspace/oficina-gta6/listos-para-publicar/</span></li>
+        <li><strong>Clips seleccionados</strong><span>/workspace/oficina-gta6/clips-seleccionados/</span></li>
+        <li><strong>Reglas de campañas</strong><span>/workspace/oficina-gta6/campañas/reglas.md</span></li>
+        <li><strong>Registro de clips y métricas</strong><span>/workspace/oficina-gta6/metricas/registro-clips.csv</span></li>
+      </ul>
+      <aside class="callout">
+        <strong>Nada se publica sin tu OK.</strong>
+        El Publicador tiene la sesión iniciada en TikTok @crazymory y YouTube @CrazyMory, pero cada clip pasa antes por la aprobación de Crazy Mory.
+      </aside>
+    </section>
+
+    <section class="block" aria-labelledby="paginas-title">
+      <h2 id="paginas-title">Páginas de la oficina</h2>
+      <div class="cards">
+        <a class="card" href="https://cursor.com/canvas/store-06ac39fb-3bb0-49dd-829f-bd1866134309/d5280b8e-1751-4e6c-b653-77b0348b7f6b">
+          <span class="card-site">Página de Grok Bot</span>
+          <span class="card-title">Plan de la oficina de clips para GTA VI</span>
+        </a>
+        <a class="card" href="https://cursor.com/canvas/store-06ac39fb-3bb0-49dd-829f-bd1866134309/2ffabec6-12d4-43c8-92ca-9cee2b428eb9">
+          <span class="card-site">Página de Grok Bot</span>
+          <span class="card-title">Campañas de clipping y monetización</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <a class="jojo-float" href="grokbot://app/v1/agent?id=6afd7123-abe9-417e-8fef-c09903ffbca8" aria-label="Hablar con Jojo">Hablar con Jojo</a>
+
+  <script src="office.js" defer></script>
+</body>
+</html>
