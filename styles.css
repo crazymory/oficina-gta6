@@ -444,3 +444,6 @@ code {
 .office-sign { display:inline-block; margin:0 0 0 12px; padding:6px 16px; border:2px solid; border-radius:8px; font-weight:800; letter-spacing:.2em; font-size:14px; vertical-align:middle; }
 .office-sign.is-open { color: var(--lime); border-color: var(--lime); box-shadow:0 0 12px var(--lime); }
 .office-sign.is-closed { color:#ff4d6d; border-color:#ff4d6d; box-shadow:0 0 12px #ff4d6d; }
+
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.toolbar[hidden]{display:none!important}
