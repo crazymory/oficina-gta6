@@ -480,7 +480,7 @@
     const P = L.pos;
     const CYCLE = 6000;
     const phase = (now % CYCLE) / CYCLE;
-    const handoffs = estado.traspasos || [];
+    const handoffs = (estado.oficina && estado.oficina.abierta === false) ? [] : (estado.traspasos || []);
 
     const active = demo
       ? [FLOW[Math.floor(now / CYCLE) % FLOW.length]]
