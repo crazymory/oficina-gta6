@@ -143,9 +143,18 @@
     return e;
   }
 
+  function isActiveTipo(t) { return t === "trabajando" || t === "aprobacion"; }
+  function anyoneWorking() {
+    return Object.values(estado.agentes || {}).some((a) => isActiveTipo(a && a.tipo));
+  }
+  function officeOpen() {
+    const o = estado.oficina;
+    return !o || o.abierta !== false || anyoneWorking();
+  }
+
   function tipoOf(s) {
-    if (estado.oficina && estado.oficina.abierta === false) return "pausa";
     const typ = s?.tipo;
+    if (estado.oficina && estado.oficina.abierta === false) return isActiveTipo(typ) ? typ : "pausa";
     return typ === "trabajando" || typ === "aprobacion" ? typ : "esperando";
   }
 
@@ -743,8 +752,9 @@
     const o = estado.oficina;
     if (!o) { el.hidden = true; return; }
     el.hidden = false;
-    el.className = "office-sign " + (o.abierta ? "is-open" : "is-closed");
-    el.textContent = o.abierta ? "ABIERTA" : "CERRADA";
+    const open = officeOpen();
+    el.className = "office-sign " + (open ? "is-open" : "is-closed");
+    el.textContent = open ? "ABIERTA" : "CERRADA";
     el.title = o.mensaje || "";
   }
 
