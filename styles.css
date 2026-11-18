@@ -493,3 +493,7 @@ code {
 
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .toolbar[hidden]{display:none!important}
+
+/* Sin cuenta atrás: los marcadores ocupan todo el ancho */
+.hud-tiles { flex: 1 1 auto; }
+.hud-tiles .tile { flex: 1 1 0; }

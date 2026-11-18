@@ -9,7 +9,7 @@
   const MUTED = "#B9B6C5";
   const FLOOR = "#08070B";
   const JOJO_CHAT = "grokbot://app/v1/agent?id=6afd7123-abe9-417e-8fef-c09903ffbca8";
-  const LAUNCH_MS = Date.parse("2026-11-19T00:00:00+01:00");
+
   const MONO = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
   const POLL_MS = 3000;
 
@@ -650,11 +650,6 @@
   }
 
   function renderHud(now) {
-    const rem = Math.max(0, LAUNCH_MS - Date.now());
-    const d = Math.floor(rem / 86400000);
-    const h = Math.floor((rem % 86400000) / 3600000);
-    const m = Math.floor((rem % 3600000) / 60000);
-    const s = Math.floor((rem % 60000) / 1000);
     const c = estado.contadores;
     const compactHud = width < 560;
     const tiles = compactHud
@@ -676,11 +671,6 @@
               <div class="value" style="text-shadow:0 0 8px ${col}">${esc(value)}</div>
               <div class="label">${esc(label)}</div>
             </div>`).join("")}
-        </div>
-        <div class="launch">
-          <div class="kicker">${rem === 0 ? "GTA VI ya ha salido" : (compactHud ? "GTA VI" : "Lanzamiento de GTA VI")}</div>
-          <div class="clock">${d}d ${pad2(h)}:${pad2(m)}:${pad2(s)}</div>
-          <div class="sub">19 nov 2026, 00:00 · hora de Madrid</div>
         </div>
       </div>`;
   }
