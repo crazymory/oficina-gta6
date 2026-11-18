@@ -112,6 +112,13 @@
     return estado.agentes?.[id] ?? { ...FALLBACK_STATE, ultima_actualizacion: estado.actualizado };
   }
 
+  function labelOf(st, tipo) {
+    if (tipo === "pausa") return "Durmiendo";
+    const e = (st && st.estado) || "";
+    if (!e || /durm|pausa/i.test(e)) return "Esperando";
+    return e;
+  }
+
   function tipoOf(s) {
     if (estado.oficina && estado.oficina.abierta === false) return "pausa";
     const typ = s?.tipo;
@@ -526,7 +533,7 @@
         ${desk(p.x, p.y, agent, now, walker ? "esperando" : tipo)}
         <text x="${p.x}" y="${p.y + 44}" text-anchor="middle" font-size="11" font-family="${MONO}" fill="${MUTED}">${esc(agent.short)}</text>
         ${deskBar(p.x, p.y + 50, st, tipo, now)}
-        ${bubble(p.x, p.y - 62, st.estado || "—", tipo, agent.accent, now)}
+        ${bubble(p.x, p.y - 62, labelOf(st, tipo), tipo, agent.accent, now)}
       </g>`;
     }).join("");
 
@@ -638,7 +645,7 @@
     els.panel.innerHTML = `
       <div class="panel-head">
         <strong>${esc(agent.name)}</strong>
-        <span class="panel-status">${esc((st.estado || "").toUpperCase())}</span>
+        <span class="panel-status">${esc(labelOf(st, tipoOf(st)).toUpperCase())}</span>
       </div>
       <div class="role">${esc(agent.role)}</div>
       ${line("Tarea actual", esc(st.tarea_actual || "—"))}
