@@ -44,25 +44,34 @@
     ],
   };
   const NARROW = {
-    w: 360,
-    h: 1020,
+    w: 400,
+    h: 488,
+    scale: 0.8,
     pos: {
-      jojo: { x: 180, y: 150 },
-      analista: { x: 96, y: 346 },
-      seleccionador: { x: 264, y: 346 },
-      editor: { x: 180, y: 542 },
-      publicador: { x: 180, y: 738 },
-      analista_pub: { x: 96, y: 934 },
-      buscador: { x: 264, y: 934 },
+      jojo: { x: 200, y: 118 },
+      analista: { x: 60, y: 268 },
+      seleccionador: { x: 146, y: 268 },
+      editor: { x: 297, y: 268 },
+      publicador: { x: 103, y: 422 },
+      analista_pub: { x: 254, y: 422 },
+      buscador: { x: 340, y: 422 },
     },
     zones: [
-      { name: "COORDINACIÓN", x: 8, y: 36, w: 344, h: 188, accent: "#FFFFFF" },
-      { name: "DETECCIÓN", x: 8, y: 232, w: 344, h: 188, accent: CYAN },
-      { name: "PRODUCCIÓN", x: 8, y: 428, w: 344, h: 188, accent: LIME },
-      { name: "PUBLICACIÓN", x: 8, y: 624, w: 344, h: 188, accent: MAGENTA },
-      { name: "RESULTADOS", x: 8, y: 820, w: 344, h: 188, accent: BLUE },
+      { name: "COORDINACIÓN", x: 10, y: 28, w: 380, h: 144, accent: "#FFFFFF" },
+      { name: "DETECCIÓN", x: 10, y: 178, w: 186, h: 148, accent: CYAN },
+      { name: "PRODUCCIÓN", x: 204, y: 178, w: 186, h: 148, accent: LIME },
+      { name: "PUBLICACIÓN", x: 10, y: 332, w: 186, h: 148, accent: MAGENTA },
+      { name: "RESULTADOS", x: 204, y: 332, w: 186, h: 148, accent: BLUE },
     ],
-    bubbleMax: { analista: 148, seleccionador: 148, analista_pub: 148, buscador: 148 },
+    bubbleMax: {
+      jojo: 130,
+      analista: 90,
+      seleccionador: 90,
+      editor: 130,
+      publicador: 130,
+      analista_pub: 90,
+      buscador: 90,
+    },
   };
 
   const FLOW = [
@@ -511,9 +520,8 @@
     const size = narrow ? 8 : 9;
     const tracking = narrow ? 1.8 : 2.2;
     return (zones || []).map((z) => {
-      const centered = !narrow || z.name === "COORDINACIÓN";
-      const lx = centered ? z.x + z.w / 2 : z.x + 12;
-      const anchor = centered ? "middle" : "start";
+      const lx = z.x + z.w / 2;
+      const anchor = "middle";
       return `
       <g pointer-events="none">
         <rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}" rx="5" fill="${z.accent}" opacity="0.045"/>
@@ -537,10 +545,12 @@
           .filter((h) => h.activo && h.de in P && h.a in P)
           .map((h) => [h.de, h.a, h.que]);
 
+    const s = L.scale || 1;
+    const foot = 34 * s;
     const walkers = {};
     active.forEach(([from, to, label]) => {
-      const a = { x: P[from].x, y: P[from].y + 34 };
-      const b = { x: P[to].x, y: P[to].y + 34 };
+      const a = { x: P[from].x, y: P[from].y + foot };
+      const b = { x: P[to].x, y: P[to].y + foot };
       let k = 0;
       if (phase < 0.45) k = (phase / 0.45) * 0.78;
       else if (phase < 0.55) k = 0.78;
@@ -553,7 +563,7 @@
     const lines = FLOW.map(([a, b], i) => {
       const isActive = active.some(([f, to]) => f === a && to === b);
       const accent = isActive ? agentById(a).accent : PINK;
-      return `<line x1="${P[a].x}" y1="${P[a].y + 34}" x2="${P[b].x}" y2="${P[b].y + 34}" stroke="${accent}" stroke-opacity="${isActive ? 0.9 : 0.22}" stroke-width="${isActive ? 2.5 : 1.5}" stroke-dasharray="6 6" stroke-dashoffset="${dash}"/>`;
+      return `<line x1="${P[a].x}" y1="${P[a].y + foot}" x2="${P[b].x}" y2="${P[b].y + foot}" stroke="${accent}" stroke-opacity="${isActive ? 0.9 : 0.22}" stroke-width="${isActive ? 2.5 : 1.5}" stroke-dasharray="6 6" stroke-dashoffset="${dash}"/>`;
     }).join("");
 
     const desks = ORDER.map((id, i) => {
@@ -567,14 +577,16 @@
         ? `<rect x="${p.x - 54}" y="${p.y - 62}" width="108" height="118" rx="8" fill="none" stroke="${agent.accent}" stroke-width="2" stroke-dasharray="4 4" opacity="${0.6 + 0.4 * Math.sin(now / 200)}"/>`
         : "";
       const seatedSprite = walker ? "" : sprite(p.x - 10, p.y, agent, now, i * 1.7, tipo, false, true);
-      return `<g data-agent="${id}" style="cursor:pointer">
+      const cluster = `
         <rect x="${p.x - 60}" y="${p.y - 80}" width="120" height="148" fill="transparent"/>
         ${sel}
         ${seatedSprite}
         ${desk(p.x, p.y, agent, now, walker ? "esperando" : tipo)}
         <text x="${p.x}" y="${p.y + 44}" text-anchor="middle" font-size="11" font-family="${MONO}" fill="${MUTED}">${esc(agent.short)}</text>
         ${deskBar(p.x, p.y + 50, st, tipo, now)}
-        ${bubble(p.x, p.y - 62, labelOf(st, tipo), tipo, agent.accent, now, L.bubbleMax && L.bubbleMax[id])}
+        ${bubble(p.x, p.y - 62, labelOf(st, tipo), tipo, agent.accent, now, L.bubbleMax && L.bubbleMax[id])}`;
+      const xf = s === 1 ? "" : ` transform="translate(${p.x} ${p.y}) scale(${s}) translate(${-p.x} ${-p.y})"`;
+      return `<g data-agent="${id}" style="cursor:pointer"${xf}>${cluster}
       </g>`;
     }).join("");
 
@@ -582,12 +594,16 @@
       const w = walkers[id];
       const agent = agentById(id);
       const tp = P[w.to];
-      const pack = w.carrying
-        ? packet(w.pos.x, w.pos.y - 62, agent.accent)
-        : packet(tp.x - 30, tp.y - 8, agent.accent);
+      const packCarry = packet(w.pos.x, w.pos.y - 62, agent.accent);
+      const packDesk = packet(tp.x - 30, tp.y - 8, agent.accent);
+      const xfW = s === 1 ? "" : ` transform="translate(${w.pos.x} ${w.pos.y}) scale(${s}) translate(${-w.pos.x} ${-w.pos.y})"`;
+      const xfD = s === 1 ? "" : ` transform="translate(${tp.x} ${tp.y}) scale(${s}) translate(${-tp.x} ${-tp.y})"`;
       return `<g pointer-events="none">
-        ${sprite(w.pos.x, w.pos.y, agent, now, 1, "trabajando", true, false)}
-        ${pack}
+        <g${xfW}>
+          ${sprite(w.pos.x, w.pos.y, agent, now, 1, "trabajando", true, false)}
+          ${w.carrying ? packCarry : ""}
+        </g>
+        ${w.carrying ? "" : `<g${xfD}>${packDesk}</g>`}
       </g>`;
     }).join("");
 
@@ -612,8 +628,8 @@
       <rect x="${L.w - 40}" y="30" width="40" height="6" fill="${MAGENTA}"/>
       <rect x="0" y="${L.h - 30}" width="24" height="5" fill="${LIME}"/>
       <rect x="${L.w - 26}" y="${L.h - 22}" width="22" height="5" fill="${YELLOW}"/>
-      <rect x="${L.w / 2 - 70}" y="10" width="140" height="22" fill="#0C0B12" stroke="${PINK}"/>
-      <text x="${signX}" y="26" text-anchor="middle" font-size="13" font-family="${MONO}" font-weight="700" fill="${PINK}" letter-spacing="3">CRAZYMORY</text>
+      <rect x="${L.w / 2 - (narrow ? 54 : 70)}" y="${narrow ? 6 : 10}" width="${narrow ? 108 : 140}" height="${narrow ? 16 : 22}" fill="#0C0B12" stroke="${PINK}"/>
+      <text x="${signX}" y="${narrow ? 18 : 26}" text-anchor="middle" font-size="${narrow ? 10 : 13}" font-family="${MONO}" font-weight="700" fill="${PINK}" letter-spacing="${narrow ? 2 : 3}">CRAZYMORY</text>
       ${lines}
       ${desks}
       ${walkerSvg}
@@ -627,11 +643,18 @@
     const m = Math.floor((rem % 3600000) / 60000);
     const s = Math.floor((rem % 60000) / 1000);
     const c = estado.contadores;
-    const tiles = [
-      ["Clips publicados", String(c.clips_publicados ?? 0), CYAN],
-      ["Visualizaciones", Number(c.visualizaciones ?? 0).toLocaleString("es-ES"), YELLOW],
-      ["Ingresos", `${c.ingresos_usd ?? 0} $`, LIME],
-    ];
+    const compactHud = width < 560;
+    const tiles = compactHud
+      ? [
+          ["Clips", String(c.clips_publicados ?? 0), CYAN],
+          ["Vistas", Number(c.visualizaciones ?? 0).toLocaleString("es-ES"), YELLOW],
+          ["Ingresos", `${c.ingresos_usd ?? 0} $`, LIME],
+        ]
+      : [
+          ["Clips publicados", String(c.clips_publicados ?? 0), CYAN],
+          ["Visualizaciones", Number(c.visualizaciones ?? 0).toLocaleString("es-ES"), YELLOW],
+          ["Ingresos", `${c.ingresos_usd ?? 0} $`, LIME],
+        ];
     els.hud.innerHTML = `
       <div class="hud">
         <div class="hud-tiles">
@@ -642,7 +665,7 @@
             </div>`).join("")}
         </div>
         <div class="launch">
-          <div class="kicker">${rem === 0 ? "GTA VI ya ha salido" : "Lanzamiento de GTA VI"}</div>
+          <div class="kicker">${rem === 0 ? "GTA VI ya ha salido" : (compactHud ? "GTA VI" : "Lanzamiento de GTA VI")}</div>
           <div class="clock">${d}d ${pad2(h)}:${pad2(m)}:${pad2(s)}</div>
           <div class="sub">19 nov 2026, 00:00 · hora de Madrid</div>
         </div>
