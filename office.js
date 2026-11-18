@@ -137,7 +137,7 @@
   }
 
   function labelOf(st, tipo) {
-    if (tipo === "pausa") return "Durmiendo";
+    if (tipo === "pausa") return "Esperando";
     const e = (st && st.estado) || "";
     if (!e || /durm|pausa/i.test(e)) return "Esperando";
     return e;
@@ -157,7 +157,7 @@
     if (estado.oficina && estado.oficina.abierta === false) {
       if (isActiveTipo(typ)) return typ;
       const isGenio = s && s === (estado.agentes || {}).jojo;
-      return isGenio && anyoneWorking() ? "esperando" : "pausa";
+      return "esperando";
     }
     return typ === "trabajando" || typ === "aprobacion" ? typ : "esperando";
   }
