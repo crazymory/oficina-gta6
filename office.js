@@ -137,10 +137,10 @@
   }
 
   function labelOf(st, tipo) {
-    if (tipo === "pausa") return "Esperando";
+    if (tipo === "pausa") return "Durmiendo";
     const e = (st && st.estado) || "";
-    if (!e || /durm|pausa/i.test(e)) return "Esperando";
-    return e;
+    if (tipo === "esperando" && (!e || /durm|pausa/i.test(e))) return "Esperando";
+    return e || "Esperando";
   }
 
   function isActiveTipo(t) { return t === "trabajando" || t === "aprobacion"; }
@@ -154,12 +154,11 @@
 
   function tipoOf(s) {
     const typ = s?.tipo;
-    if (estado.oficina && estado.oficina.abierta === false) {
-      if (isActiveTipo(typ)) return typ;
-      const isGenio = s && s === (estado.agentes || {}).jojo;
-      return "esperando";
-    }
-    return typ === "trabajando" || typ === "aprobacion" ? typ : "esperando";
+    if (isActiveTipo(typ)) return typ;
+    // Oficina cerrada (aunque alguien trabaje): los parados duermen.
+    if (estado.oficina && estado.oficina.abierta === false) return "pausa";
+    // Jornada completa: todos despiertos, los parados esperando.
+    return "esperando";
   }
 
   function barColor(tipo) {
