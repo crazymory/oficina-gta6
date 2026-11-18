@@ -24,30 +24,45 @@
   ];
 
   const WIDE = {
-    w: 800,
-    h: 500,
+    w: 960,
+    h: 620,
     pos: {
-      analista: { x: 140, y: 130 },
-      seleccionador: { x: 400, y: 130 },
-      editor: { x: 660, y: 130 },
-      jojo: { x: 400, y: 285 },
-      publicador: { x: 660, y: 430 },
-      analista_pub: { x: 400, y: 430 },
-      buscador: { x: 140, y: 430 },
+      jojo: { x: 480, y: 148 },
+      analista: { x: 126, y: 350 },
+      seleccionador: { x: 126, y: 520 },
+      editor: { x: 362, y: 445 },
+      publicador: { x: 598, y: 445 },
+      analista_pub: { x: 834, y: 350 },
+      buscador: { x: 834, y: 520 },
     },
+    zones: [
+      { name: "COORDINACIÓN", x: 240, y: 36, w: 480, h: 192, accent: "#FFFFFF" },
+      { name: "DETECCIÓN", x: 12, y: 236, w: 228, h: 372, accent: CYAN },
+      { name: "PRODUCCIÓN", x: 248, y: 236, w: 228, h: 372, accent: LIME },
+      { name: "PUBLICACIÓN", x: 484, y: 236, w: 228, h: 372, accent: MAGENTA },
+      { name: "RESULTADOS", x: 720, y: 236, w: 228, h: 372, accent: BLUE },
+    ],
   };
   const NARROW = {
     w: 360,
-    h: 700,
+    h: 1020,
     pos: {
-      analista: { x: 95, y: 115 },
-      seleccionador: { x: 265, y: 115 },
-      buscador: { x: 95, y: 275 },
-      editor: { x: 265, y: 275 },
-      jojo: { x: 180, y: 430 },
-      analista_pub: { x: 95, y: 600 },
-      publicador: { x: 265, y: 600 },
+      jojo: { x: 180, y: 150 },
+      analista: { x: 96, y: 346 },
+      seleccionador: { x: 264, y: 346 },
+      editor: { x: 180, y: 542 },
+      publicador: { x: 180, y: 738 },
+      analista_pub: { x: 96, y: 934 },
+      buscador: { x: 264, y: 934 },
     },
+    zones: [
+      { name: "COORDINACIÓN", x: 8, y: 36, w: 344, h: 188, accent: "#FFFFFF" },
+      { name: "DETECCIÓN", x: 8, y: 232, w: 344, h: 188, accent: CYAN },
+      { name: "PRODUCCIÓN", x: 8, y: 428, w: 344, h: 188, accent: LIME },
+      { name: "PUBLICACIÓN", x: 8, y: 624, w: 344, h: 188, accent: MAGENTA },
+      { name: "RESULTADOS", x: 8, y: 820, w: 344, h: 188, accent: BLUE },
+    ],
+    bubbleMax: { analista: 148, seleccionador: 148, analista_pub: 148, buscador: 148 },
   };
 
   const FLOW = [
@@ -459,18 +474,28 @@
     </g>`;
   }
 
-  function bubble(x, y, text, tipo, accent, now) {
+  function bubble(x, y, text, tipo, accent, now, maxW) {
     const icon = tipo === "trabajando" ? "●" : tipo === "aprobacion" ? "!" : tipo === "pausa" ? "z" : "…";
     const color = tipo === "aprobacion" ? YELLOW : tipo === "pausa" ? MUTED : tipo === "trabajando" ? LIME : CYAN;
-    const label = `${icon} ${text}`;
-    const w = Math.max(64, label.length * 6.6 + 16);
+    let shown = String(text ?? "");
+    if (maxW) {
+      const extra = icon.length + 1;
+      const maxChars = Math.max(6, Math.floor((maxW - 16) / 6.6) - extra);
+      if (shown.length > maxChars) {
+        const cut = shown.slice(0, Math.max(1, maxChars - 1));
+        const sp = cut.lastIndexOf(" ");
+        shown = `${(sp >= 8 ? cut.slice(0, sp) : cut).trim()}…`;
+      }
+    }
+    const label = `${icon} ${shown}`;
+    const w = Math.max(64, Math.min(maxW || 1e9, label.length * 6.6 + 16));
     const floatY = Math.sin(now / 600 + x) * 1.5;
     const pulse = tipo === "trabajando" ? 0.6 + 0.4 * Math.abs(Math.sin(now / 300)) : 1;
     return `<g transform="translate(0 ${floatY})">
       <rect x="${x - w / 2}" y="${y - 18}" width="${w}" height="20" rx="6" fill="#0C0B12" stroke="${accent}" stroke-width="1.5"/>
       <polygon points="${x - 5},${y + 2} ${x + 5},${y + 2} ${x},${y + 8}" fill="${accent}"/>
       <text x="${x}" y="${y - 4}" text-anchor="middle" font-size="11" font-family="${MONO}" fill="${INK}">
-        <tspan fill="${color}" opacity="${pulse}">${esc(icon)}</tspan> ${esc(text)}
+        <tspan fill="${color}" opacity="${pulse}">${esc(icon)}</tspan> ${esc(shown)}
       </text>
     </g>`;
   }
@@ -480,6 +505,22 @@
       <rect x="${x - 9}" y="${y - 7}" width="18" height="14" fill="#F6F6F8" stroke="${accent}" stroke-width="2"/>
       <polygon points="${x - 3},${y - 4} ${x - 3},${y + 4} ${x + 4},${y}" fill="${accent}"/>
     </g>`;
+  }
+
+  function zoneFloor(zones, narrow) {
+    const size = narrow ? 8 : 9;
+    const tracking = narrow ? 1.8 : 2.2;
+    return (zones || []).map((z) => {
+      const centered = !narrow || z.name === "COORDINACIÓN";
+      const lx = centered ? z.x + z.w / 2 : z.x + 12;
+      const anchor = centered ? "middle" : "start";
+      return `
+      <g pointer-events="none">
+        <rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}" rx="5" fill="${z.accent}" opacity="0.045"/>
+        <rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}" rx="5" fill="none" stroke="${z.accent}" stroke-width="1.15" stroke-opacity="0.4"/>
+        <text x="${lx}" y="${z.y + 15}" text-anchor="${anchor}" font-size="${size}" font-family="${MONO}" font-weight="700" letter-spacing="${tracking}" fill="${z.accent}" opacity="0.85">${esc(z.name)}</text>
+      </g>`;
+    }).join("");
   }
 
   function renderOffice(now) {
@@ -533,7 +574,7 @@
         ${desk(p.x, p.y, agent, now, walker ? "esperando" : tipo)}
         <text x="${p.x}" y="${p.y + 44}" text-anchor="middle" font-size="11" font-family="${MONO}" fill="${MUTED}">${esc(agent.short)}</text>
         ${deskBar(p.x, p.y + 50, st, tipo, now)}
-        ${bubble(p.x, p.y - 62, labelOf(st, tipo), tipo, agent.accent, now)}
+        ${bubble(p.x, p.y - 62, labelOf(st, tipo), tipo, agent.accent, now, L.bubbleMax && L.bubbleMax[id])}
       </g>`;
     }).join("");
 
@@ -566,6 +607,7 @@
       </defs>
       <rect width="${L.w}" height="${L.h}" fill="url(#tiles)"/>
       <rect x="4" y="4" width="${L.w - 8}" height="${L.h - 8}" fill="none" stroke="${PINK}" stroke-width="3" opacity="0.7"/>
+      ${zoneFloor(L.zones, narrow)}
       <rect x="0" y="20" width="30" height="7" fill="${CYAN}"/>
       <rect x="${L.w - 40}" y="30" width="40" height="6" fill="${MAGENTA}"/>
       <rect x="0" y="${L.h - 30}" width="24" height="5" fill="${LIME}"/>
