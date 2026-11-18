@@ -14,12 +14,12 @@
   const POLL_MS = 3000;
 
   const AGENTS = [
-    { id: "analista", name: "Analista de Directos", short: "Directos", accent: CYAN, hair: "#2B1B12", skin: "#F1C27D", role: "Graba directos y VOD, transcribe y marca picos de chat y audio.", files: ["/workspace/oficina-gta6/clips-seleccionados/"] },
-    { id: "seleccionador", name: "Seleccionador de Clips", short: "Selección", accent: YELLOW, hair: "#111111", skin: "#C68642", role: "Elige los momentos con más potencial y prepara el brief de edición.", files: ["/workspace/oficina-gta6/clips-seleccionados/", "/workspace/oficina-gta6/campañas/reglas.md"] },
-    { id: "editor", name: "Editor de Vídeo", short: "Edición", accent: LIME, hair: "#7A3E9D", skin: "#FFDBAC", role: "Corta en vertical 9:16, subtítulos, gancho y marca de agua CrazyMory.", files: ["/workspace/oficina-gta6/listos-para-publicar/", "/workspace/oficina-gta6/muestras/"] },
-    { id: "publicador", name: "Publicador", short: "Publicador", accent: MAGENTA, hair: "#E8E8E8", skin: "#8D5524", role: "Sube a TikTok @crazymory y YouTube @CrazyMory, siempre con el OK de Crazy Mory.", files: ["/workspace/oficina-gta6/listos-para-publicar/"] },
-    { id: "analista_pub", name: "Analista de Publicaciones", short: "Análisis", accent: BLUE, hair: "#3B2A20", skin: "#E0AC69", role: "Mide cada clip publicado y devuelve lo aprendido a Selección.", files: ["/workspace/oficina-gta6/metricas/registro-clips.csv"] },
-    { id: "buscador", name: "Buscador de Campañas y Monetización", short: "Buscador", accent: PINK, hair: "#FFB000", skin: "#F1C27D", role: "Busca campañas de clipping y otras formas de ganar dinero desde España.", files: ["/workspace/oficina-gta6/campañas/reglas.md"] },
+    { id: "analista", name: "Lucía · Analista de Directos", short: "Lucía", accent: CYAN, hair: "#2B1B12", skin: "#F1C27D", role: "Graba directos y VOD, transcribe y marca picos de chat y audio.", files: ["/workspace/oficina-gta6/clips-seleccionados/"] },
+    { id: "seleccionador", name: "Jason · Seleccionador de Clips", short: "Jason", accent: YELLOW, hair: "#111111", skin: "#C68642", role: "Elige los momentos con más potencial y prepara el brief de edición.", files: ["/workspace/oficina-gta6/clips-seleccionados/", "/workspace/oficina-gta6/campañas/reglas.md"] },
+    { id: "editor", name: "Tommy · Editor de Vídeo", short: "Tommy", accent: LIME, hair: "#7A3E9D", skin: "#FFDBAC", role: "Corta en vertical 9:16, subtítulos, gancho y marca de agua CrazyMory.", files: ["/workspace/oficina-gta6/listos-para-publicar/", "/workspace/oficina-gta6/muestras/"] },
+    { id: "publicador", name: "Lance · Publicador", short: "Lance", accent: MAGENTA, hair: "#E8E8E8", skin: "#8D5524", role: "Sube a TikTok @crazymory y YouTube @CrazyMory, siempre con el OK de Crazy Mory.", files: ["/workspace/oficina-gta6/listos-para-publicar/"] },
+    { id: "analista_pub", name: "Sonny · Analista de Publicaciones", short: "Sonny", accent: BLUE, hair: "#3B2A20", skin: "#E0AC69", role: "Mide cada clip publicado y devuelve lo aprendido a Selección.", files: ["/workspace/oficina-gta6/metricas/registro-clips.csv"] },
+    { id: "buscador", name: "Ken · Buscador de Campañas y Monetización", short: "Ken", accent: PINK, hair: "#FFB000", skin: "#F1C27D", role: "Busca campañas de clipping y otras formas de ganar dinero desde España.", files: ["/workspace/oficina-gta6/campañas/reglas.md"] },
     { id: "jojo", name: "Genio (coordinador)", short: "Genio", accent: "#FFFFFF", hair: "#F5F5F5", skin: "#FFDBAC", role: "Coordina a los seis agentes y lleva cada clip a la aprobación de Crazy Mory.", files: ["/workspace/oficina-gta6/estado.json"] },
   ];
 
