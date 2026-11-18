@@ -154,7 +154,11 @@
 
   function tipoOf(s) {
     const typ = s?.tipo;
-    if (estado.oficina && estado.oficina.abierta === false) return isActiveTipo(typ) ? typ : "pausa";
+    if (estado.oficina && estado.oficina.abierta === false) {
+      if (isActiveTipo(typ)) return typ;
+      const isGenio = s && s === (estado.agentes || {}).jojo;
+      return isGenio && anyoneWorking() ? "esperando" : "pausa";
+    }
     return typ === "trabajando" || typ === "aprobacion" ? typ : "esperando";
   }
 
