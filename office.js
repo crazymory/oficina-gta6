@@ -113,6 +113,7 @@
   }
 
   function tipoOf(s) {
+    if (estado.oficina && estado.oficina.abierta === false) return "pausa";
     const typ = s?.tipo;
     return typ === "trabajando" || typ === "aprobacion" || typ === "pausa" ? typ : "esperando";
   }
